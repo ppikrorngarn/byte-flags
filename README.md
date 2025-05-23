@@ -145,9 +145,6 @@ Gets all flag names in the order they were defined.
 #### `toByte(): number`
 Converts the flags to a byte value (0-255).
 
-#### `toObject(): Record<string, boolean>`
-Converts the flags to a plain JavaScript object with flag names as keys and their current values.
-
 #### `fromByte(byte: number): this`
 Loads flags from a byte value.
 
