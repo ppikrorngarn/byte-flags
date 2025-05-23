@@ -60,23 +60,33 @@ const flags = createByteFlags("isAdmin", "hasAccess", "isVerified");
 
 // Set flag values
 flags.isAdmin = true;                // Property access
-flags.setFlag("isVerified", true);   // Method access
+flags.setFlag("isAdmin", true);      // Method access
+
+flags.hasAccess = false;             // Property access
+flags.setFlag("hasAccess", false);   // Method access
 
 // Get flag values
 console.log(flags.isAdmin);          // true (property access)
+console.log(flags.getFlag("isAdmin")); // true (method access)
+
+console.log(flags.hasAccess);        // false (property access)
 console.log(flags.getFlag("hasAccess")); // false (method access)
 
-// Toggle a flag
-flags.toggleFlag("hasAccess");
-console.log(flags.hasAccess);         // true
+// Toggle flags
+flags.isVerified = !flags.isVerified; // Property access
+flags.toggleFlag("isVerified");      // Method access
 
 // Convert to byte for storage
-const byteValue = flags.toByte();
-console.log(byteValue); // 5 (binary: 00000101)
+const byteValue1 = flags.toByte();    // Property access
+const byteValue2 = flags.toByte();    // Method access (same result)
 
 // Restore from byte
-const restored = createByteFlags("isAdmin", "hasAccess", "isVerified")
-  .fromByte(byteValue);
+const restored1 = createByteFlags("isAdmin", "hasAccess", "isVerified")
+  .fromByte(byteValue1);
+
+// Alternative: Create new instance and restore
+const restored2 = createByteFlags("isAdmin", "hasAccess", "isVerified");
+restored2.fromByte(byteValue2);
 ```
 
 ## Type Safety with TypeScript
@@ -93,8 +103,25 @@ function createPermissions(): ByteFlagsWithFlags<AppPermissions> {
 }
 
 const perms = createPermissions();
-perms.admin = true;    // Type-safe
-// perms.unknown = true; // TypeScript error
+
+// Property access (type-safe)
+perms.admin = true;
+console.log(perms.admin);    // true
+
+// Method access (type-safe)
+perms.setFlag('editor', true);
+console.log(perms.getFlag('editor'));  // true
+
+// perms.unknown = true;                // Error: Property 'unknown' does not exist
+// perms.setFlag('unknown', true);      // Error: Argument of type '"unknown"' is not assignable
+// console.log(perms.unknownFlag);      // Error: Property 'unknownFlag' does not exist
+// console.log(perms.getFlag('oops'));  // Error: Argument of type '"oops"' is not assignable
+
+// Working with the flags object (type-safe iteration)
+const allFlags = perms.getFlags();  // Returns ['admin', 'editor', 'viewer']
+allFlags.forEach(flag => {
+  console.log(`${flag}: ${perms.getFlag(flag)}`);  // Type-safe access
+});
 ```
 
 ## API Reference
