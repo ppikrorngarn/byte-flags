@@ -42,7 +42,7 @@
     "dist",
     "README.md"
   ],
-  "description": "ByteFlags is a tiny, flexible TypeScript class for managing byte flags. This library let you store up to 8 boolean flags in a single byte.",
+  "description": "A lightweight, type-safe utility for efficiently storing and managing up to 8 boolean flags in a single byte. Perfect for permission systems, feature flags, and status tracking with zero dependencies and full TypeScript support.",
   "devDependencies": {
     "typescript": "^5.8.3"
   },
