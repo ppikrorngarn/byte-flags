@@ -1,16 +1,17 @@
+import type { ByteFlagsWithFlags } from './types';
+
 /**
- * A utility class for efficiently storing and managing boolean flags in a single byte (8 bits).
+ * Efficiently stores and manages up to 8 boolean flags in a single byte.
+ * 
+ * Ideal for permission systems, feature flags, or status tracking where compact
+ * serialization is needed. Flag names are fixed at creation for type safety.
  *
- * This class provides a memory-efficient way to store up to 8 boolean flags in a single byte,
- * with methods to manipulate individual flags, convert to/from a byte representation for storage,
- * and toggle flag states. It's particularly useful for scenarios requiring compact serialization
- * of multiple boolean values, such as permission systems, feature flags, or status tracking.
+ * @example
+ * // Recommended usage with type safety:
+ * const flags = createByteFlags('read', 'write', 'execute');
+ * flags.read = true; // TypeScript knows this is a boolean
  *
- * The class is immutable in terms of flag names after creation, ensuring type safety and preventing
- * accidental addition of new flags at runtime. All flag operations are type-checked when using TypeScript.
- *
- * @class ByteFlags
- * @see README.md for detailed examples and API reference
+ * @see {@link createByteFlags} for better TypeScript support
  */
 
 // Maximum number of flags that can be stored in a single byte
@@ -200,4 +201,20 @@ export class ByteFlags {
       return obj;
     }, {} as Record<string, boolean>);
   }
+}
+
+/**
+ * Creates a type-safe ByteFlags instance with the specified flag names
+ * @example
+ * // Basic usage
+ * const flags = createByteFlags('read', 'write');
+ * flags.read = true; // TypeScript knows this is a boolean
+ *
+ * // With explicit type
+ * type AppFlags = 'darkMode' | 'notifications' | 'analytics';
+ * const features = createByteFlags<AppFlags>('darkMode', 'notifications');
+ * features.darkMode = true; // OK
+ */
+export function createByteFlags<T extends string>(...flagNames: T[]): ByteFlagsWithFlags<T> {
+  return new ByteFlags(...flagNames) as ByteFlagsWithFlags<T>;
 }
