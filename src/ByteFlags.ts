@@ -2,15 +2,15 @@ import { BaseFlags } from "./BaseFlags";
 import type { FlagsWithFlags } from "./types";
 
 /**
- * Efficiently stores and manages up to 8 boolean flags in a single byte.
+ * Efficiently stores and manages up to 8 boolean flags in a single byte (8-bit value).
  *
  * Ideal for permission systems, feature flags, or status tracking where compact
  * serialization is needed. Flag names are fixed at creation for type safety.
  *
  * @example
  * // Recommended usage with type safety:
- * const flags = createByteFlags('read', 'write', 'execute');
- * flags.read = true; // TypeScript knows this is a boolean
+ * const flags = createByteFlags('read', 'write', 'execute', 'admin', 'guest');
+ * flags.admin = true; // TypeScript knows this is a boolean
  *
  * @see {@link createByteFlags} for better TypeScript support
  */
@@ -68,12 +68,12 @@ export class ByteFlags extends BaseFlags {
  * Creates a type-safe ByteFlags instance with the specified flag names
  * @example
  * // Basic usage
- * const flags = createByteFlags('read', 'write');
- * flags.read = true; // TypeScript knows this is a boolean
+ * const flags = createByteFlags('read', 'write', 'admin', 'guest');
+ * flags.admin = true; // TypeScript knows this is a boolean
  *
  * // With explicit type
  * type AppFlags = 'darkMode' | 'notifications' | 'analytics';
- * const features = createByteFlags<AppFlags>('darkMode', 'notifications');
+ * const features = createByteFlags<AppFlags>('darkMode', 'notifications', 'analytics');
  * features.darkMode = true; // OK
  */
 export function createByteFlags<T extends string>(

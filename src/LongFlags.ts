@@ -2,15 +2,14 @@ import { BaseFlags } from "./BaseFlags";
 import type { FlagsWithFlags } from "./types";
 
 /**
- * Efficiently stores and manages up to 32 boolean flags in a single long (32-bit) value.
+ * Efficiently stores and manages up to 32 boolean flags in a single long (32-bit value).
  *
  * Ideal for permission systems, feature flags, or status tracking where compact
  * serialization is needed and many flags are required.
  *
  * @example
  * // Recommended usage with type safety:
- * const flags = createLongFlags('read', 'write', 'execute', 'admin', 'guest', 'premium',
- *                              'verified', 'active', 'suspended', 'blocked', 'flagged');
+ * const flags = createLongFlags('read', 'write', 'execute', 'admin', 'guest');
  * flags.admin = true; // TypeScript knows this is a boolean
  *
  * @see {@link createLongFlags} for better TypeScript support
@@ -21,7 +20,7 @@ export class LongFlags extends BaseFlags {
 
   // Maximum long value (2^32 - 1)
   protected readonly MAX_VALUE = 0xffffffff;
-  
+
   /**
    * Create a new LongFlags instance with the specified flag names
    * @param flagNames Names of flags to initialize (1-32 flags)
@@ -69,13 +68,13 @@ export class LongFlags extends BaseFlags {
  * Creates a type-safe LongFlags instance with the specified flag names
  * @example
  * // Basic usage
- * const flags = createLongFlags('read', 'write', 'admin', 'guest', 'premium');
+ * const flags = createLongFlags('read', 'write', 'admin', 'guest');
  * flags.admin = true; // TypeScript knows this is a boolean
  *
  * // With explicit type
- * type AppFlags = 'darkMode' | 'notifications' | 'analytics' | 'premium' | 'beta' | 'experimental' | 'legacy';
- * const features = createLongFlags<AppFlags>('darkMode', 'notifications', 'analytics', 'premium', 'beta', 'experimental', 'legacy');
- * features.premium = true; // OK
+ * type AppFlags = 'darkMode' | 'notifications' | 'analytics';
+ * const features = createLongFlags<AppFlags>('darkMode', 'notifications', 'analytics');
+ * features.darkMode = true; // OK
  */
 export function createLongFlags<T extends string>(
   ...flagNames: T[]

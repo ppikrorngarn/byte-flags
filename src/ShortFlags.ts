@@ -2,14 +2,14 @@ import { BaseFlags } from "./BaseFlags";
 import type { FlagsWithFlags } from "./types";
 
 /**
- * Efficiently stores and manages up to 16 boolean flags in a single short (16-bit) value.
+ * Efficiently stores and manages up to 16 boolean flags in a single short (16-bit value).
  *
  * Ideal for permission systems, feature flags, or status tracking where compact
  * serialization is needed and more than 8 flags are required.
  *
  * @example
  * // Recommended usage with type safety:
- * const flags = createShortFlags('read', 'write', 'execute', 'admin', 'guest', 'premium', 'verified', 'active', 'suspended');
+ * const flags = createShortFlags('read', 'write', 'execute', 'admin', 'guest');
  * flags.admin = true; // TypeScript knows this is a boolean
  *
  * @see {@link createShortFlags} for better TypeScript support
@@ -72,9 +72,9 @@ export class ShortFlags extends BaseFlags {
  * flags.admin = true; // TypeScript knows this is a boolean
  *
  * // With explicit type
- * type AppFlags = 'darkMode' | 'notifications' | 'analytics' | 'premium' | 'beta';
- * const features = createShortFlags<AppFlags>('darkMode', 'notifications', 'analytics', 'premium', 'beta');
- * features.premium = true; // OK
+ * type AppFlags = 'darkMode' | 'notifications' | 'analytics';
+ * const features = createShortFlags<AppFlags>('darkMode', 'notifications', 'analytics');
+ * features.darkMode = true; // OK
  */
 export function createShortFlags<T extends string>(
   ...flagNames: T[]
