@@ -21,6 +21,18 @@ export class LongFlags extends BaseFlags {
 
   // Maximum long value (2^32 - 1)
   protected readonly MAX_VALUE = 0xffffffff;
+  
+  /**
+   * Create a new LongFlags instance with the specified flag names
+   * @param flagNames Names of flags to initialize (1-32 flags)
+   * @throws Error if more than 32 flags are provided or if flag names are invalid
+   */
+  constructor(...flagNames: string[]) {
+    if (flagNames.length > 32) {
+      throw new Error("Cannot have more than 32 flags");
+    }
+    super(...flagNames);
+  }
 
   /**
    * Create a LongFlags instance from a JSON string

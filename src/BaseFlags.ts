@@ -31,10 +31,12 @@ export abstract class BaseFlags {
    * @throws Error if more than the maximum number of flags are provided or if flag names are invalid
    */
   constructor(...flagNames: string[]) {
-    // Child classes will define MAX_FLAGS, we'll validate in addFlag method
     if (flagNames.length === 0) {
       throw new Error("At least one flag name must be provided");
     }
+
+    // The validation against MAX_FLAGS will happen in the child classes
+    // by overriding validateFlagCount
 
     // Add each flag to the instance
     for (const name of flagNames) {

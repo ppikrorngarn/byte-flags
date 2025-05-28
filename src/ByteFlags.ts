@@ -22,6 +22,18 @@ export class ByteFlags extends BaseFlags {
   protected readonly MAX_VALUE = 0xff;
 
   /**
+   * Create a new ByteFlags instance with the specified flag names
+   * @param flagNames Names of flags to initialize (1-8 flags)
+   * @throws Error if more than 8 flags are provided or if flag names are invalid
+   */
+  constructor(...flagNames: string[]) {
+    if (flagNames.length > 8) {
+      throw new Error("Cannot have more than 8 flags");
+    }
+    super(...flagNames);
+  }
+
+  /**
    * Convert the flags to a byte value (0-255)
    * @returns Byte representation of all flags
    */

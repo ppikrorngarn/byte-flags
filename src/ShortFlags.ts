@@ -22,6 +22,18 @@ export class ShortFlags extends BaseFlags {
   protected readonly MAX_VALUE = 0xffff;
 
   /**
+   * Create a new ShortFlags instance with the specified flag names
+   * @param flagNames Names of flags to initialize (1-16 flags)
+   * @throws Error if more than 16 flags are provided or if flag names are invalid
+   */
+  constructor(...flagNames: string[]) {
+    if (flagNames.length > 16) {
+      throw new Error("Cannot have more than 16 flags");
+    }
+    super(...flagNames);
+  }
+
+  /**
    * Create a ShortFlags instance from a JSON string
    * @param json JSON string or object from toJSON()
    * @returns New ShortFlags instance
