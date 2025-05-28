@@ -424,7 +424,9 @@ Creates a new LongFlags instance for managing up to 32 boolean flags.
 
 The following methods are available on all flag types (ByteFlags, ShortFlags, and LongFlags):
 
-### Instance Methods
+#### `hasFlag(name: string): boolean`
+
+Checks if a flag exists in this instance.
 
 #### `getFlag(name: string): boolean`
 
@@ -437,10 +439,6 @@ Sets the value of a flag by name.
 #### `toggleFlag(name: string): this`
 
 Toggles the value of a flag (`true` becomes `false`, `false` becomes `true`).
-
-#### `any(): boolean`
-
-Checks if any flag is set to `true`.
 
 #### `getFlags(): string[]`
 
@@ -514,6 +512,8 @@ Allows iteration over the flags using `for...of`.
 
 Converts the flags to a byte value (0-255).
 
+**Returns:** `number` - An 8-bit integer representing the flag states
+
 #### `fromByte(byte: number): this`
 
 Loads flags from a byte value.
@@ -532,6 +532,20 @@ Loads flags from a byte value.
 const features = createByteFlags("read", "write").fromByte(3); // (binary: 00000011)
 console.log(features.toObject()); // { read: true, write: true }
 ```
+
+#### `static fromJSON(json: string | object): ByteFlags`
+
+Creates a ByteFlags instance from a JSON string or object.
+
+**Parameters:**
+
+- `json` - JSON string or object from toJSON()
+
+**Returns:** `ByteFlags` - A new ByteFlags instance
+
+**Throws:**
+
+- `Error` - If JSON is invalid or flags don't match
 
 #### ShortFlags Methods
 
@@ -559,6 +573,20 @@ Loads flags from a short value.
 const features = createShortFlags("read", "write", "execute").fromShort(7); // (binary: 0000000000000111)
 console.log(features.toObject()); // { read: true, write: true, execute: true }
 ```
+
+#### `static fromJSON(json: string | object): ShortFlags`
+
+Creates a ShortFlags instance from a JSON string or object.
+
+**Parameters:**
+
+- `json` - JSON string or object from toJSON()
+
+**Returns:** `ShortFlags` - A new ShortFlags instance
+
+**Throws:**
+
+- `Error` - If JSON is invalid or flags don't match
 
 #### LongFlags Methods
 
@@ -588,6 +616,20 @@ const features = createLongFlags("read", "write", "execute", "admin").fromLong(
 ); // (binary: 00000000000000000000000000001111)
 console.log(features.toObject()); // { read: true, write: true, execute: true, admin: true }
 ```
+
+#### `static fromJSON(json: string | object): LongFlags`
+
+Creates a LongFlags instance from a JSON string or object.
+
+**Parameters:**
+
+- `json` - JSON string or object from toJSON()
+
+**Returns:** `LongFlags` - A new LongFlags instance
+
+**Throws:**
+
+- `Error` - If JSON is invalid or flags don't match
 
 ## Memory and Performance
 
