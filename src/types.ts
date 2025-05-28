@@ -21,7 +21,6 @@ export type FlagsWithFlags<T extends string, F extends BaseFlags> = F &
 
 /**
  * Type that represents a ByteFlags instance with dynamically added flag properties
- * @deprecated Use FlagsWithFlags<T, ByteFlags> instead
  */
 export type ByteFlagsWithFlags<T extends string> = FlagsWithFlags<T, ByteFlags>;
 
