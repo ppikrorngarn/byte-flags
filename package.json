@@ -16,7 +16,7 @@
     "build:cjs": "tsc --project tsconfig.cjs.json",
     "build": "npm run build:esm && npm run build:cjs",
     "clean": "rm -rf dist",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "keywords": [
     "flags",
@@ -44,7 +44,9 @@
   ],
   "description": "A lightweight, type-safe utility for efficiently storing and managing up to 8 boolean flags in a single byte. Perfect for permission systems, feature flags, and status tracking with zero dependencies and full TypeScript support.",
   "devDependencies": {
+    "@types/jest": "^29.5.14",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.3.4",
     "typescript": "^5.8.3"
-  },
-  "dependencies": {}
+  }
 }

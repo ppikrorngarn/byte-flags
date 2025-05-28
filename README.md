@@ -8,7 +8,10 @@ A lightweight, type-safe utility class for efficiently storing and managing up t
 - **Type-Safe**: Full TypeScript support with type checking
 - **Immutable Flag Names**: Flag names are fixed at creation time for type safety
 - **Multiple Access Methods**: Use property access or method calls
-- **Serialization**: Easily convert to/from a single byte for storage
+- **Bulk Operations**: Set/toggle multiple flags at once
+- **Combination Checks**: Check multiple flags in a single call
+- **Serialization**: Convert to/from byte, object, or JSON
+- **Iterable**: Use `for...of` to loop through flags
 - **Zero Dependencies**: Lightweight with no external dependencies
 
 ## Installation
@@ -56,37 +59,63 @@ You can create a new ByteFlags instance in two ways:
 import { createByteFlags } from "@piyawasin/byte-flags";
 
 // Create a new ByteFlags instance
-const flags = createByteFlags("isAdmin", "hasAccess", "isVerified");
+const flags = createByteFlags("isAdmin", "hasAccess", "isVerified", "isActive");
 
 // Set flag values
 flags.isAdmin = true;                // Property access
 flags.setFlag("isAdmin", true);      // Method access
 
-flags.hasAccess = false;             // Property access
-flags.setFlag("hasAccess", false);   // Method access
+// Set multiple flags at once
+flags.setFlags({
+  hasAccess: true,
+  isVerified: false
+});
 
 // Get flag values
 console.log(flags.isAdmin);          // true (property access)
 console.log(flags.getFlag("isAdmin")); // true (method access)
 
-console.log(flags.hasAccess);        // false (property access)
-console.log(flags.getFlag("hasAccess")); // false (method access)
-
 // Toggle flags
-flags.isVerified = !flags.isVerified; // Property access
-flags.toggleFlag("isVerified");      // Method access
+flags.toggleFlag("isVerified");      // Toggle a single flag
+flags.toggleFlags("isActive", "isAdmin"); // Toggle multiple flags
+
+// Check multiple flags
+if (flags.all("isAdmin", "hasAccess")) {
+  console.log("User has both admin and access");
+}
+
+if (flags.anyOf("isActive", "isVerified")) {
+  console.log("User is either active or verified");
+}
+
+if (flags.noneOf("isBanned", "isSuspended")) {
+  console.log("User is not banned or suspended");
+}
+
+// Count set flags
+console.log(`${flags.count()} out of ${flags.size()} flags are set`);
 
 // Convert to byte for storage
-const byteValue1 = flags.toByte();    // Property access
-const byteValue2 = flags.toByte();    // Method access (same result)
+const byteValue = flags.toByte();
+const restored = createByteFlags("isAdmin", "hasAccess", "isVerified", "isActive")
+  .fromByte(byteValue);
 
-// Restore from byte
-const restored1 = createByteFlags("isAdmin", "hasAccess", "isVerified")
-  .fromByte(byteValue1);
+// JSON serialization
+const json = JSON.stringify(flags); // Uses toJSON() automatically
+const fromJson = ByteFlags.fromJSON(JSON.parse(json));
 
-// Alternative: Create new instance and restore
-const restored2 = createByteFlags("isAdmin", "hasAccess", "isVerified");
-restored2.fromByte(byteValue2);
+// Iterate over flags
+for (const [name, isSet] of flags) {
+  console.log(`${name}: ${isSet}`);
+}
+
+// Get all flag names
+const flagNames = flags.getFlagNames(); // Get all flag names as an array
+// const oldWay = flags.getFlags();     // Deprecated: Use getFlagNames() instead
+
+// Reset all flags
+flags.reset();      // Set all flags to false
+flags.setAll();     // Set all flags to true
 ```
 
 ## Type Safety with TypeScript
@@ -118,10 +147,13 @@ console.log(perms.getFlag('editor'));  // true
 // console.log(perms.getFlag('oops'));  // Error: Argument of type '"oops"' is not assignable
 
 // Working with the flags object (type-safe iteration)
-const allFlags = perms.getFlags();  // Returns ['admin', 'editor', 'viewer']
+const allFlags = perms.getFlagNames();  // Returns ['admin', 'editor', 'viewer']
 allFlags.forEach(flag => {
   console.log(`${flag}: ${perms.getFlag(flag)}`);  // Type-safe access
 });
+
+// Deprecated approach (still works but not recommended)
+// const oldFlags = perms.getFlags();  // Deprecated: Use getFlagNames() instead
 ```
 
 ## API Reference
@@ -163,11 +195,64 @@ Sets the value of a flag by name.
 #### `toggleFlag(name: string): this`
 Toggles the value of a flag (`true` becomes `false`, `false` becomes `true`).
 
+#### `any(): boolean`
+Checks if any flag is set to `true`.
+
+#### `none(): boolean`
+Checks if no flags are set to `true` (all flags are `false`).
+
 #### `hasFlag(name: string): boolean`
 Checks if a flag exists in this ByteFlags instance.
 
-#### `getFlags(): string[]`
+#### `getFlagNames(): string[]`
 Gets all flag names in the order they were defined.
+
+#### `getFlags(): string[]`
+**⚠️ Deprecated**: Use `getFlagNames()` instead for better clarity. This method will be removed in a future version.
+
+Gets all flag names in the order they were defined.
+
+#### `getFlagNames(): string[]`
+Gets all flag names in the order they were defined. (Preferred over `getFlags`)
+
+#### `setFlags(flags: Record<string, boolean>): this`
+Sets multiple flags at once using an object of flag names and their values.
+
+#### `toggleFlags(...names: string[]): this`
+Toggles multiple flags at once.
+
+#### `all(...names: string[]): boolean`
+Checks if all specified flags are `true`.
+
+#### `anyOf(...names: string[]): boolean`
+Checks if any of the specified flags are `true`.
+
+#### `noneOf(...names: string[]): boolean`
+Checks if none of the specified flags are `true`.
+
+#### `count(): number`
+Returns the number of flags that are currently set to `true`.
+
+#### `size(): number`
+Returns the total number of flags defined.
+
+#### `any(): boolean`
+Returns `true` if any flag is set to `true`.
+
+#### `none(): boolean`
+Returns `true` if no flags are set to `true`.
+
+#### `reset(): this`
+Sets all flags to `false`.
+
+#### `setAll(): this`
+Sets all flags to `true`.
+
+#### `toJSON(): Record<string, boolean>`
+Converts the flags to a plain object for JSON serialization.
+
+#### `[Symbol.iterator](): IterableIterator<[string, boolean]>`
+Allows iteration over the flags using `for...of`.
 
 #### `toByte(): number`
 Converts the flags to a byte value (0-255).
