@@ -28,15 +28,15 @@ export abstract class BaseFlags {
   /**
    * Create a new flags instance with the specified flag names
    * @param flagNames Names of flags to initialize
-   * @throws Error if more than the maximum number of flags are provided or if flag names are invalid
+   * @throws Error if no flag names are provided or if flag names are invalid
    */
   constructor(...flagNames: string[]) {
     if (flagNames.length === 0) {
       throw new Error("At least one flag name must be provided");
     }
 
-    // The validation against MAX_FLAGS will happen in the child classes
-    // by overriding validateFlagCount
+    // Note: Max flags validation must be done in subclass constructors
+    // since we can't access abstract properties here
 
     // Add each flag to the instance
     for (const name of flagNames) {
