@@ -15,11 +15,15 @@ import type { FlagsWithFlags } from "./types";
  * @see {@link createByteFlags} for better TypeScript support
  */
 export class ByteFlags extends BaseFlags {
+  // For use in constructor
+  private static readonly _MAX_FLAGS = 8;
+  private static readonly _MAX_VALUE = 0xff;
+
   // Maximum number of flags that can be stored in a single byte
-  protected readonly MAX_FLAGS = 8;
+  protected readonly MAX_FLAGS = ByteFlags._MAX_FLAGS;
 
   // Maximum byte value (2^8 - 1)
-  protected readonly MAX_VALUE = 0xff;
+  protected readonly MAX_VALUE = ByteFlags._MAX_VALUE;
 
   /**
    * Create a new ByteFlags instance with the specified flag names
@@ -27,8 +31,8 @@ export class ByteFlags extends BaseFlags {
    * @throws Error if more than 8 flags are provided or if flag names are invalid
    */
   constructor(...flagNames: string[]) {
-    if (flagNames.length > 8) {
-      throw new Error("Cannot have more than 8 flags");
+    if (flagNames.length > ByteFlags._MAX_FLAGS) {
+      throw new Error(`Cannot have more than ${ByteFlags._MAX_FLAGS} flags`);
     }
     super(...flagNames);
   }

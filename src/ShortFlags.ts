@@ -15,11 +15,15 @@ import type { FlagsWithFlags } from "./types";
  * @see {@link createShortFlags} for better TypeScript support
  */
 export class ShortFlags extends BaseFlags {
+  // For use in constructor
+  private static readonly _MAX_FLAGS = 16;
+  private static readonly _MAX_VALUE = 0xffff;
+
   // Maximum number of flags that can be stored in a single short (16 bits)
-  protected readonly MAX_FLAGS = 16;
+  protected readonly MAX_FLAGS = ShortFlags._MAX_FLAGS;
 
   // Maximum short value (2^16 - 1)
-  protected readonly MAX_VALUE = 0xffff;
+  protected readonly MAX_VALUE = ShortFlags._MAX_VALUE;
 
   /**
    * Create a new ShortFlags instance with the specified flag names
@@ -27,8 +31,8 @@ export class ShortFlags extends BaseFlags {
    * @throws Error if more than 16 flags are provided or if flag names are invalid
    */
   constructor(...flagNames: string[]) {
-    if (flagNames.length > 16) {
-      throw new Error("Cannot have more than 16 flags");
+    if (flagNames.length > ShortFlags._MAX_FLAGS) {
+      throw new Error(`Cannot have more than ${ShortFlags._MAX_FLAGS} flags`);
     }
     super(...flagNames);
   }

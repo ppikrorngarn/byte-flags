@@ -15,11 +15,15 @@ import type { FlagsWithFlags } from "./types";
  * @see {@link createLongFlags} for better TypeScript support
  */
 export class LongFlags extends BaseFlags {
+  // For use in constructor
+  private static readonly _MAX_FLAGS = 32;
+  private static readonly _MAX_VALUE = 0xffffffff;
+
   // Maximum number of flags that can be stored in a single long (32 bits)
-  protected readonly MAX_FLAGS = 32;
+  protected readonly MAX_FLAGS = LongFlags._MAX_FLAGS;
 
   // Maximum long value (2^32 - 1)
-  protected readonly MAX_VALUE = 0xffffffff;
+  protected readonly MAX_VALUE = LongFlags._MAX_VALUE;
 
   /**
    * Create a new LongFlags instance with the specified flag names
@@ -27,8 +31,8 @@ export class LongFlags extends BaseFlags {
    * @throws Error if more than 32 flags are provided or if flag names are invalid
    */
   constructor(...flagNames: string[]) {
-    if (flagNames.length > 32) {
-      throw new Error("Cannot have more than 32 flags");
+    if (flagNames.length > LongFlags._MAX_FLAGS) {
+      throw new Error(`Cannot have more than ${LongFlags._MAX_FLAGS} flags`);
     }
     super(...flagNames);
   }
